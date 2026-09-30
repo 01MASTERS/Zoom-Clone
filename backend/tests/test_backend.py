@@ -203,6 +203,42 @@ def test_websocket_signaling_full_flow():
         assert left_msg["peerId"] == "peer-2"
 
 
+def test_websocket_remove_participant_host_action():
+    """Verify that when host removes participant, target is evicted and peers notified immediately."""
+    client = TestClient(app)
+    meeting_room = "test-kick-room"
+
+    with client.websocket_connect(f"/ws/meeting/{meeting_room}?peer_id=host-1&name=Alice&is_host=true") as ws_host:
+        _ = ws_host.receive_json()  # room-state
+
+        with client.websocket_connect(f"/ws/meeting/{meeting_room}?peer_id=guest-1&name=Bob&is_host=false") as ws_guest:
+            _ = ws_host.receive_json()   # user-joined
+            _ = ws_guest.receive_json()  # room-state
+
+            # Alice kicks Bob
+            ws_host.send_json({
+                "type": "host-action",
+                "action": "remove-participant",
+                "targetPeerId": "guest-1"
+            })
+
+            # Bob receives host-action notification
+            bob_msg = ws_guest.receive_json()
+            assert bob_msg["type"] == "host-action"
+            assert bob_msg["action"] == "remove-participant"
+            assert bob_msg["targetPeerId"] == "guest-1"
+
+            # Alice receives host-action broadcast
+            alice_msg = ws_host.receive_json()
+            assert alice_msg["type"] == "host-action"
+            assert alice_msg["targetPeerId"] == "guest-1"
+
+            # Alice also receives user-left from server-side eviction
+            left_msg = ws_host.receive_json()
+            assert left_msg["type"] == "user-left"
+            assert left_msg["peerId"] == "guest-1"
+
+
 @pytest.mark.asyncio
 async def test_get_me():
     """Verify GET /api/me returns default logged-in user profile."""

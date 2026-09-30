@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { UserX, PhoneOff, ArrowLeft } from 'lucide-react';
 
 interface RemovedByHostModalProps {
@@ -8,6 +8,7 @@ interface RemovedByHostModalProps {
   reason?: 'removed' | 'ended';
   hostName?: string;
   onConfirm: () => void;
+  autoRedirectSeconds?: number;
 }
 
 export default function RemovedByHostModal({
@@ -15,19 +16,47 @@ export default function RemovedByHostModal({
   reason = 'removed',
   hostName = 'The host',
   onConfirm,
+  autoRedirectSeconds = 3,
 }: RemovedByHostModalProps) {
+  const [countdown, setCountdown] = useState(autoRedirectSeconds);
+  const hasConfirmedRef = useRef(false);
+
+  const handleConfirm = useCallback(() => {
+    if (hasConfirmedRef.current) return;
+    hasConfirmedRef.current = true;
+    onConfirm();
+  }, [onConfirm]);
+
   useEffect(() => {
     if (!isOpen) return;
 
+    hasConfirmedRef.current = false;
+    setCountdown(autoRedirectSeconds);
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleConfirm();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' || e.key === 'Enter') {
-        onConfirm();
+        clearInterval(interval);
+        handleConfirm();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onConfirm]);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, autoRedirectSeconds, handleConfirm]);
 
   if (!isOpen) return null;
 
@@ -123,17 +152,37 @@ export default function RemovedByHostModal({
             fontSize: '14px',
             lineHeight: 1.5,
             color: 'rgba(255, 255, 255, 0.75)',
-            marginBottom: '24px',
+            marginBottom: '12px',
             maxWidth: '340px',
           }}
         >
           {description}
         </p>
 
+        {/* Countdown notice badge */}
+        <div
+          style={{
+            fontSize: '12px',
+            color: 'rgba(255, 255, 255, 0.65)',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            backgroundColor: 'rgba(255, 255, 255, 0.06)',
+            padding: '5px 14px',
+            borderRadius: '12px',
+          }}
+        >
+          <span>Returning to home in</span>
+          <span style={{ fontWeight: 700, color: '#FFFFFF', fontVariantNumeric: 'tabular-nums' }}>
+            {countdown}s
+          </span>
+        </div>
+
         {/* Action Button */}
         <button
           type="button"
-          onClick={onConfirm}
+          onClick={handleConfirm}
           autoFocus
           style={{
             width: '100%',
@@ -162,7 +211,7 @@ export default function RemovedByHostModal({
           }}
         >
           <ArrowLeft size={16} />
-          <span>OK, Return to Home</span>
+          <span>Return to Home Now</span>
         </button>
       </div>
     </div>

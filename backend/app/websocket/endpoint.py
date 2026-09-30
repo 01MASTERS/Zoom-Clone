@@ -83,6 +83,15 @@ async def websocket_signaling_endpoint(
                     }
                     await manager.broadcast(clean_meeting_id, host_payload)
 
+                    if action == "remove-participant" and target_pid:
+                        target_ws = manager.rooms.get(clean_meeting_id, {}).get(target_pid)
+                        await manager.disconnect(clean_meeting_id, target_pid)
+                        if target_ws:
+                            try:
+                                await target_ws.close(code=1000, reason="Removed by host")
+                            except Exception:
+                                pass
+
             elif msg_type == "ping":
                 await websocket.send_json({"type": "pong"})
 

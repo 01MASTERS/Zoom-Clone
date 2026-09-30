@@ -113,7 +113,7 @@ export default function MeetingPage({ params }: MeetingPageProps) {
         sessionStorage.setItem('zoom_notification', reason);
       } catch {}
     }
-    router.push('/');
+    router.push(reason ? `/?notification=${encodeURIComponent(reason)}` : '/');
   };
 
   // 1. Loading State Screen

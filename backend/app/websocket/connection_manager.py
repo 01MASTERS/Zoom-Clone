@@ -67,8 +67,10 @@ class ConnectionManager:
     async def disconnect(self, meeting_id: str, peer_id: str) -> None:
         """Remove peer from room and broadcast departure to peers."""
         if meeting_id in self.rooms:
-            self.rooms[meeting_id].pop(peer_id, None)
+            ws = self.rooms[meeting_id].pop(peer_id, None)
             info = self.peer_info[meeting_id].pop(peer_id, None)
+            if ws is None and info is None:
+                return
 
             # Broadcast user-left to remaining participants
             if self.rooms[meeting_id]:

@@ -397,10 +397,41 @@ export function useWebRTC({
           if (data.action === 'mute-all') {
             if (!isHost && onHostMutedRef.current) onHostMutedRef.current();
           } else if (data.action === 'remove-participant') {
-            if (data.targetPeerId === myPeerIdRef.current && onKickedRef.current) {
-              onKickedRef.current('removed', data.by || 'The host');
+            if (data.targetPeerId === myPeerIdRef.current) {
+              // I am the target participant being removed by host
+              Object.keys(peerConnectionsRef.current).forEach((pid) => {
+                try {
+                  peerConnectionsRef.current[pid].close();
+                } catch {}
+              });
+              peerConnectionsRef.current = {};
+              setPeers({});
+              if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
+                try {
+                  wsRef.current.close();
+                } catch {}
+              }
+              if (onKickedRef.current) {
+                onKickedRef.current('removed', data.by || 'The host');
+              }
             } else if (!data.targetPeerId && !isHost && onKickedRef.current) {
+              // Meeting ended by host for all
+              Object.keys(peerConnectionsRef.current).forEach((pid) => {
+                try {
+                  peerConnectionsRef.current[pid].close();
+                } catch {}
+              });
+              peerConnectionsRef.current = {};
+              setPeers({});
+              if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
+                try {
+                  wsRef.current.close();
+                } catch {}
+              }
               onKickedRef.current('ended', data.by || 'The host');
+            } else if (data.targetPeerId) {
+              // Another participant was removed by host -> evict from local UI immediately
+              closePeerRef.current(data.targetPeerId);
             }
           }
         }
@@ -464,8 +495,11 @@ export function useWebRTC({
         action,
         targetPeerId,
       });
+      if (action === 'remove-participant' && targetPeerId) {
+        closePeer(targetPeerId);
+      }
     },
-    [sendMessage]
+    [sendMessage, closePeer]
   );
 
   // Seamless track replacement (e.g. for screen sharing or camera toggle)

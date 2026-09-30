@@ -1,0 +1,15 @@
+node_modules
+.next
+__pycache__
+*.py[cod]
+.git
+*.db
+*.db-wal
+*.db-shm
+.pytest_cache
+venv
+env
+frontend/certificates/
+.env.local
+.planning
+.claude

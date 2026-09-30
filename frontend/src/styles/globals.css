@@ -1,0 +1,321 @@
+@import "./zoom-theme.css";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: var(--zoom-bg);
+  color: var(--zoom-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Tablet and Mobile Responsive Layout Rules */
+@media (max-width: 768px) {
+  /* Workplace Navigation Bar */
+  .workplace-navbar {
+    padding: 0 14px !important;
+    height: 56px !important;
+  }
+  .navbar-search-box {
+    display: none !important;
+  }
+
+  /* Dashboard Main Container */
+  .dashboard-main {
+    padding: 20px 14px 48px !important;
+  }
+
+  /* Force single-column on tablets and mobile screens to prevent horizontal overflow */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+/* Mobile Responsive Styles (<640px) */
+@media (max-width: 640px) {
+  /* Navbar Profile: avatar only */
+  .navbar-profile-text {
+    display: none !important;
+  }
+
+  /* Dashboard Hero Date & Time */
+  .dashboard-hero-time {
+    font-size: 32px !important;
+    letter-spacing: -0.5px !important;
+  }
+  .dashboard-hero-date {
+    font-size: 13px !important;
+  }
+
+  /* Action Buttons (New Meeting, Join, Schedule) */
+  .dashboard-action-buttons {
+    gap: 20px !important;
+    margin-top: 20px !important;
+  }
+  .action-btn-circle {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 16px !important;
+  }
+  .action-btn-circle svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .action-btn-label {
+    font-size: 12px !important;
+  }
+
+  /* Cards on Dashboard */
+  .upcoming-card,
+  .recent-card,
+  .pmi-card {
+    padding: 16px !important;
+  }
+
+  /* Upcoming & Recent Item Rows: stack info and buttons vertically */
+  .upcoming-item-row,
+  .recent-item-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 14px !important;
+  }
+  .upcoming-item-info,
+  .recent-item-info {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .upcoming-item-actions,
+  .recent-item-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Pre-Join Preview Screen */
+  .preview-header {
+    padding: 12px 14px !important;
+  }
+  .preview-header-extra {
+    display: none !important;
+  }
+  .preview-main {
+    padding: 16px 12px !important;
+  }
+  .preview-card-body {
+    padding: 16px !important;
+  }
+  .preview-controls {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .preview-tool-btn {
+    flex: 1 1 120px !important;
+    justify-content: center !important;
+  }
+
+  /* Meeting Room Header */
+  .meeting-header {
+    padding: 0 10px !important;
+    height: 48px !important;
+  }
+  .meeting-header-title {
+    max-width: 120px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px !important;
+  }
+  .meeting-header-extra {
+    display: none !important;
+  }
+  .meeting-header-status {
+    min-width: auto !important;
+  }
+  .meeting-header-status-text {
+    display: none !important;
+  }
+  .meeting-timer-pill {
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+  }
+
+  /* Video Grid on Mobile */
+  .video-grid-container {
+    padding: 8px !important;
+    gap: 8px !important;
+    max-height: 100% !important;
+  }
+  .video-grid-2 {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+  }
+  .video-grid-many {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: minmax(160px, 1fr) !important;
+    overflow-y: auto !important;
+  }
+
+  /* Pinned / Spotlight Filmstrip on Mobile */
+  .filmstrip-scroll-row {
+    height: 95px !important;
+    gap: 8px !important;
+  }
+  .filmstrip-scroll-row > div {
+    width: 135px !important;
+  }
+
+  /* In-Meeting Toolbar on Mobile */
+  .meeting-toolbar {
+    height: 60px !important;
+    padding: 0 4px !important;
+    justify-content: space-around !important;
+    gap: 2px !important;
+  }
+  .toolbar-desktop-only {
+    display: none !important;
+  }
+  .meeting-tool-btn {
+    width: 52px !important;
+    height: 48px !important;
+    padding: 2px !important;
+  }
+  .meeting-tool-btn span {
+    font-size: 9px !important;
+    margin-top: 2px !important;
+  }
+  .meeting-tool-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .meeting-leave-btn {
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+  }
+
+  /* Collaboration Drawer overlay on mobile */
+  .collaboration-drawer {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 200 !important;
+  }
+}
+
+/* Smallest mobile viewports (<480px) */
+@media (max-width: 480px) {
+  .dashboard-action-buttons {
+    gap: 12px !important;
+  }
+  .action-btn-circle {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 14px !important;
+  }
+  .action-btn-circle svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .action-btn-label {
+    font-size: 11px !important;
+  }
+  .modal-datetime-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+/* Hover effects only on devices that actually support hover (desktops/laptops, not touch screens) */
+@media (hover: hover) {
+  .preview-tool-btn:hover {
+    filter: brightness(1.25);
+  }
+  .meeting-tool-btn:hover {
+    filter: brightness(1.25);
+  }
+}
+
+@keyframes zoomFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive toast & modal on small screens */
+@media (max-width: 480px) {
+  .zoom-toast-container {
+    left: 16px !important;
+    right: 16px !important;
+    bottom: 16px !important;
+    max-width: none !important;
+    font-size: 12px !important;
+    padding: 10px 14px !important;
+  }
+  .removed-modal-card {
+    padding: 22px 18px 18px !important;
+  }
+}
+

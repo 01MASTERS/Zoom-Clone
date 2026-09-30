@@ -1,0 +1,47 @@
+:root {
+  /* Core Zoom Palette */
+  --zoom-blue: #0E71EB;
+  --zoom-blue-hover: #0B5CFF;
+  --zoom-blue-light: #EBF4FF;
+  --zoom-orange: #F26D21;
+  --zoom-orange-hover: #E05D12;
+  --zoom-orange-light: #FFF2EB;
+  
+  /* Backgrounds & Surfaces */
+  --zoom-bg: #F7F9FA;
+  --zoom-card-bg: #FFFFFF;
+  --zoom-border: #E1E4E8;
+  --zoom-border-subtle: #EBECEF;
+  --zoom-input-bg: #F4F5F7;
+  --zoom-input-focus: #FFFFFF;
+  
+  /* Text & Labels */
+  --zoom-text-primary: #232333;
+  --zoom-text-secondary: #6E7687;
+  --zoom-text-muted: #9BA3AF;
+  
+  /* Accents */
+  --zoom-green: #108548;
+  --zoom-green-light: #E6F7ED;
+  --zoom-red: #E02828;
+  --zoom-red-hover: #C71F1F;
+  --zoom-red-light: #FDE8E8;
+  
+  /* In-Meeting Dark Theme Tokens */
+  --zoom-meeting-bg: #1A1A1A;
+  --zoom-meeting-toolbar: #242424;
+  --zoom-meeting-tile: #2E2E2E;
+  --zoom-meeting-text: #FFFFFF;
+  
+  /* Elevations */
+  --zoom-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --zoom-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --zoom-shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.08);
+  --zoom-modal-shadow: 0 20px 48px rgba(0, 0, 0, 0.16);
+  
+  /* Radii */
+  --zoom-radius-sm: 6px;
+  --zoom-radius-md: 10px;
+  --zoom-radius-lg: 16px;
+  --zoom-radius-pill: 9999px;
+}

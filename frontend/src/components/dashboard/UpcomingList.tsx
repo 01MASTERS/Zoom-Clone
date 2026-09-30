@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, Clock, Video, Copy, Loader2, Trash2, FileText } from 'lucide-react';
+import { Calendar, Clock, Video, Copy, Loader2, Trash2, FileText, Pencil } from 'lucide-react';
 import { getUpcomingMeetings, formatMeetingId, deleteMeeting, Meeting } from '@/lib/api';
 import CopyInvitationModal from '../CopyInvitationModal';
+import EditMeetingModal from './EditMeetingModal';
 
 interface UpcomingListProps {
   refreshTrigger?: number;
@@ -18,6 +19,7 @@ export default function UpcomingList({ refreshTrigger, onShowToast, onOpenSchedu
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [inviteModalMeeting, setInviteModalMeeting] = useState<Meeting | null>(null);
+  const [editModalMeeting, setEditModalMeeting] = useState<Meeting | null>(null);
 
   const fetchMeetings = async () => {
     try {
@@ -321,6 +323,31 @@ export default function UpcomingList({ refreshTrigger, onShowToast, onOpenSchedu
 
                 <button
                   type="button"
+                  onClick={() => setEditModalMeeting(meeting)}
+                  title="Edit scheduled meeting"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--zoom-radius-pill)',
+                    backgroundColor: 'var(--zoom-input-bg)',
+                    color: 'var(--zoom-text-primary)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    transition: 'background-color 0.15s ease',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-border)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)')}
+                >
+                  <Pencil size={13} />
+                  <span>Edit</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => handleCopyLink(meeting.invite_url)}
                   title="Copy invitation link"
                   style={{
@@ -402,6 +429,17 @@ export default function UpcomingList({ refreshTrigger, onShowToast, onOpenSchedu
         isOpen={Boolean(inviteModalMeeting)}
         onClose={() => setInviteModalMeeting(null)}
         onCopied={() => onShowToast('Meeting invitation copied to clipboard!')}
+      />
+
+      {/* Zoom-Style Edit Scheduled Meeting Modal */}
+      <EditMeetingModal
+        meeting={editModalMeeting}
+        isOpen={Boolean(editModalMeeting)}
+        onClose={() => setEditModalMeeting(null)}
+        onUpdated={(updatedTitle) => {
+          fetchMeetings();
+          onShowToast(`Meeting "${updatedTitle}" updated successfully!`);
+        }}
       />
     </div>
   );

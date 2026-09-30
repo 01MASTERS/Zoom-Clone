@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, Clock, Video, Copy, ExternalLink, Trash2, FileText } from 'lucide-react';
+import { Calendar, Clock, Video, Copy, ExternalLink, Trash2, FileText, Pencil } from 'lucide-react';
 import { Meeting, formatMeetingId } from '@/lib/api';
 
 interface MeetingCardProps {
@@ -10,6 +10,7 @@ interface MeetingCardProps {
   type?: 'upcoming' | 'recent';
   onCopyLink: (link: string) => void;
   onOpenInvitationModal?: (meeting: Meeting) => void;
+  onEditMeeting?: (meeting: Meeting) => void;
   onDeleteMeeting?: (meetingId: string) => void;
 }
 
@@ -18,6 +19,7 @@ export default function MeetingCard({
   type = 'upcoming',
   onCopyLink,
   onOpenInvitationModal,
+  onEditMeeting,
   onDeleteMeeting,
 }: MeetingCardProps) {
   const router = useRouter();
@@ -146,6 +148,30 @@ export default function MeetingCard({
           >
             <FileText size={13} />
             <span>Invitation</span>
+          </button>
+        )}
+
+        {onEditMeeting && type === 'upcoming' && (
+          <button
+            type="button"
+            onClick={() => onEditMeeting(meeting)}
+            title="Edit scheduled meeting"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '6px',
+              border: '1px solid #D1D5DB',
+              backgroundColor: '#FFFFFF',
+              color: '#374151',
+              fontSize: '12px',
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+          >
+            <Pencil size={13} />
+            <span>Edit</span>
           </button>
         )}
 

@@ -216,69 +216,152 @@ export default function UpcomingList({ refreshTrigger, onShowToast, onOpenSchedu
           </div>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {meetings.map((meeting) => (
             <div
               key={meeting.id}
-              className="upcoming-item-row"
+              className="upcoming-item-card"
               style={{
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '16px 20px',
+                flexDirection: 'column',
+                gap: '12px',
+                padding: '18px 20px',
                 borderRadius: 'var(--zoom-radius-md)',
                 border: '1px solid var(--zoom-border-subtle)',
                 backgroundColor: '#FFFFFF',
-                transition: 'all 0.15s ease',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
+                transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = 'var(--zoom-blue)';
-                e.currentTarget.style.boxShadow = 'var(--zoom-shadow-sm)';
+                e.currentTarget.style.boxShadow = '0 6px 18px rgba(14, 113, 235, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--zoom-border-subtle)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              {/* Meeting Info */}
-              <div className="upcoming-item-info" style={{ maxWidth: '65%' }}>
+              {/* Top Row: Date/Time Badge + Duration + Management Actions (Edit, Delete) */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+              }}>
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  marginBottom: '4px',
+                  flexWrap: 'wrap',
                 }}>
+                  {/* Time & Date Pill */}
                   <div style={{
                     fontSize: '12px',
                     fontWeight: 600,
                     color: 'var(--zoom-blue)',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
+                    gap: '5px',
+                    padding: '3px 10px',
+                    borderRadius: '6px',
+                    backgroundColor: 'var(--zoom-blue-light)',
+                    whiteSpace: 'nowrap',
                   }}>
                     <Clock size={13} />
-                    {formatDateTime(meeting.scheduled_at)}
+                    <span>{formatDateTime(meeting.scheduled_at)}</span>
                   </div>
+
+                  {/* Duration Pill */}
                   <span style={{
                     fontSize: '11px',
-                    padding: '1px 6px',
-                    borderRadius: '4px',
+                    padding: '3px 8px',
+                    borderRadius: '6px',
                     backgroundColor: 'var(--zoom-input-bg)',
                     color: 'var(--zoom-text-secondary)',
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
                   }}>
                     {meeting.duration_minutes} min
                   </span>
                 </div>
 
-                <div style={{
-                  fontSize: '15px',
+                {/* Management Quick Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEditModalMeeting(meeting)}
+                    title="Edit scheduled meeting"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      backgroundColor: 'var(--zoom-input-bg)',
+                      border: '1px solid var(--zoom-border-subtle)',
+                      color: 'var(--zoom-text-primary)',
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--zoom-border)';
+                      e.currentTarget.style.color = '#111827';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)';
+                      e.currentTarget.style.color = 'var(--zoom-text-primary)';
+                    }}
+                  >
+                    <Pencil size={12} />
+                    <span>Edit</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(meeting.meeting_code || meeting.meeting_id)}
+                    title="Delete scheduled meeting"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '6px',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #FEE2E2',
+                      color: '#DC2626',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FEE2E2';
+                      e.currentTarget.style.borderColor = '#FCA5A5';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                      e.currentTarget.style.borderColor = '#FEE2E2';
+                    }}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Middle Section: Full-Width Title + ID & Passcode */}
+              <div>
+                <h3 style={{
+                  fontSize: '16px',
                   fontWeight: 600,
                   color: 'var(--zoom-text-primary)',
-                  marginBottom: '2px',
+                  margin: '2px 0 6px',
+                  lineHeight: 1.35,
+                  wordBreak: 'break-word',
                 }}>
                   {meeting.title}
-                </div>
+                </h3>
 
                 <div style={{
                   fontSize: '12px',
@@ -286,136 +369,131 @@ export default function UpcomingList({ refreshTrigger, onShowToast, onOpenSchedu
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
+                  flexWrap: 'wrap',
                 }}>
-                  <span>Meeting ID: <strong>{formatMeetingId(meeting.meeting_id)}</strong></span>
+                  <span style={{ whiteSpace: 'nowrap' }}>
+                    Meeting ID: <strong style={{ color: 'var(--zoom-text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatMeetingId(meeting.meeting_id)}</strong>
+                  </span>
                   {meeting.passcode && (
-                    <span>Passcode: <strong>{meeting.passcode}</strong></span>
+                    <>
+                      <span style={{ color: 'var(--zoom-border)' }}>•</span>
+                      <span style={{ whiteSpace: 'nowrap' }}>
+                        Passcode: <strong style={{ color: 'var(--zoom-text-primary)' }}>{meeting.passcode}</strong>
+                      </span>
+                    </>
                   )}
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="upcoming-item-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  type="button"
-                  onClick={() => setInviteModalMeeting(meeting)}
-                  title="Copy meeting invitation"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--zoom-radius-pill)',
-                    backgroundColor: 'var(--zoom-input-bg)',
-                    color: 'var(--zoom-text-primary)',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    transition: 'background-color 0.15s ease',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-border)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)')}
-                >
-                  <FileText size={13} />
-                  <span>Invitation</span>
-                </button>
+              {/* Bottom Row / Action Bar */}
+              <div style={{
+                borderTop: '1px solid var(--zoom-border-subtle)',
+                paddingTop: '12px',
+                marginTop: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '10px',
+                flexWrap: 'wrap',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyLink(meeting.invite_url)}
+                    title="Copy invitation link"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 14px',
+                      borderRadius: 'var(--zoom-radius-pill)',
+                      backgroundColor: 'var(--zoom-input-bg)',
+                      border: '1px solid var(--zoom-border-subtle)',
+                      color: 'var(--zoom-text-primary)',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.15s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--zoom-border)';
+                      e.currentTarget.style.borderColor = 'var(--zoom-border)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)';
+                      e.currentTarget.style.borderColor = 'var(--zoom-border-subtle)';
+                    }}
+                  >
+                    <Copy size={13} />
+                    <span>Copy Link</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => setEditModalMeeting(meeting)}
-                  title="Edit scheduled meeting"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--zoom-radius-pill)',
-                    backgroundColor: 'var(--zoom-input-bg)',
-                    color: 'var(--zoom-text-primary)',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    transition: 'background-color 0.15s ease',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-border)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)')}
-                >
-                  <Pencil size={13} />
-                  <span>Edit</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleCopyLink(meeting.invite_url)}
-                  title="Copy invitation link"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--zoom-radius-pill)',
-                    backgroundColor: 'var(--zoom-input-bg)',
-                    color: 'var(--zoom-text-primary)',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    transition: 'background-color 0.15s ease',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-border)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)')}
-                >
-                  <Copy size={13} />
-                  <span>Copy Link</span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setInviteModalMeeting(meeting)}
+                    title="Copy meeting invitation details"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 14px',
+                      borderRadius: 'var(--zoom-radius-pill)',
+                      backgroundColor: 'var(--zoom-input-bg)',
+                      border: '1px solid var(--zoom-border-subtle)',
+                      color: 'var(--zoom-text-primary)',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.15s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--zoom-border)';
+                      e.currentTarget.style.borderColor = 'var(--zoom-border)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--zoom-input-bg)';
+                      e.currentTarget.style.borderColor = 'var(--zoom-border-subtle)';
+                    }}
+                  >
+                    <FileText size={13} />
+                    <span>Invitation</span>
+                  </button>
+                </div>
 
                 <button
                   type="button"
                   onClick={() => handleStart(meeting.meeting_id)}
                   style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
-                    padding: '8px 18px',
+                    padding: '7px 22px',
                     borderRadius: 'var(--zoom-radius-pill)',
                     backgroundColor: 'var(--zoom-blue)',
                     color: '#FFFFFF',
                     fontSize: '13px',
                     fontWeight: 600,
-                    boxShadow: '0 2px 6px rgba(14, 113, 235, 0.25)',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 6px rgba(14, 113, 235, 0.28)',
                     transition: 'all 0.15s ease',
                     border: 'none',
                     cursor: 'pointer',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-blue-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--zoom-blue)')}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--zoom-blue-hover)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(14, 113, 235, 0.4)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--zoom-blue)';
+                    e.currentTarget.style.boxShadow = '0 2px 6px rgba(14, 113, 235, 0.28)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
                 >
                   <Video size={14} fill="#FFFFFF" />
                   <span>Start</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleDelete(meeting.meeting_code || meeting.meeting_id)}
-                  title="Delete scheduled meeting"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--zoom-radius-pill)',
-                    backgroundColor: '#FEF2F2',
-                    color: '#DC2626',
-                    border: '1px solid #FCA5A5',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#FEE2E2')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#FEF2F2')}
-                >
-                  <Trash2 size={13} />
                 </button>
               </div>
             </div>

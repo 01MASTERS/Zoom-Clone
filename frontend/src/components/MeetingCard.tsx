@@ -143,6 +143,7 @@ export default function MeetingCard({
               color: '#374151',
               fontSize: '12px',
               fontWeight: 500,
+              whiteSpace: 'nowrap',
               cursor: 'pointer',
             }}
           >
@@ -167,6 +168,7 @@ export default function MeetingCard({
               color: '#374151',
               fontSize: '12px',
               fontWeight: 500,
+              whiteSpace: 'nowrap',
               cursor: 'pointer',
             }}
           >
@@ -190,6 +192,7 @@ export default function MeetingCard({
             color: '#374151',
             fontSize: '12px',
             fontWeight: 500,
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
           }}
         >
@@ -211,6 +214,7 @@ export default function MeetingCard({
             color: '#FFFFFF',
             fontSize: '12px',
             fontWeight: 600,
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
           }}
         >
